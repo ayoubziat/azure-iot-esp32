@@ -7,7 +7,7 @@
 // WiFi PW
 #define WIFI_PASSWORD ""
 
-// Azure IoT Hub connection string
-#define AZURE_IOT_CONNECTION_STRING ""
+// Primary connection string of the device
+#define IOT_DEVICE_PRIMARY_CONNECTION_STRING ""
 
 #define DEVICE_NAME ""

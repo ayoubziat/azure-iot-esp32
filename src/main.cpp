@@ -29,7 +29,7 @@ void setup() {
     return;
   }
 
-  Esp32MQTTClient_Init((const uint8_t*) AZURE_IOT_CONNECTION_STRING);
+  Esp32MQTTClient_Init((const uint8_t*) IOT_DEVICE_PRIMARY_CONNECTION_STRING);
   Esp32MQTTClient_SetSendConfirmationCallback(callback);
 }
 
