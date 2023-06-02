@@ -5,5 +5,3 @@ To monitor the sent events, run the following command in a separate terminal:
 
 
 ## Trouble shooting:
-
-https://github.com/VSChina/ESP32_AzureIoT_Arduino/issues/24#issuecomment-1087631545
