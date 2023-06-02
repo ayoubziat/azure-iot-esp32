@@ -5,10 +5,8 @@
 // WiFi password
 #define WIFI_PASSWORD ""
 
-// Azure IoT
+// Azure IoTs
 
-// When developing for your own Arduino-based platform,
-// please follow the format '(ard;<platform>)'.
 #define AZURE_SDK_CLIENT_USER_AGENT "c%2F" AZ_SDK_VERSION_STRING
 
 // Primary connection string of the device
