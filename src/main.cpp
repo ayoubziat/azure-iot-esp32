@@ -19,6 +19,8 @@ static az_iot_hub_client iot_hub_client;
 WiFiMulti wifiMulti;
 DHTSensor dhtSensor;
 
+#define SUBSCRIBE_TOPIC "devices/" DEVICE_ID "/messages/devicebound/#"
+
 void connectToWiFi();
 void initTime();
 void initIoTHubClient();
@@ -56,7 +58,7 @@ void loop() {
       Serial.println(F("Failed to read from DHT sensor"));
     }
     else {
-      sendTelemetryData(temperature, humidity);
+      // sendTelemetryData(temperature, humidity);
     }
   }
 }
@@ -119,13 +121,13 @@ static esp_err_t mqttEventHandler(esp_mqtt_event_handle_t event) {
       break;
     case MQTT_EVENT_CONNECTED:
       Serial.println("MQTT event MQTT_EVENT_CONNECTED");
-      int r;
-      r = esp_mqtt_client_subscribe(mqtt_client, AZ_IOT_HUB_CLIENT_C2D_SUBSCRIBE_TOPIC, MQTT_QOS1);
-      if (r == -1) {
+      int result;
+      result = esp_mqtt_client_subscribe(mqtt_client, SUBSCRIBE_TOPIC, MQTT_QOS1);
+      if (result == -1) {
         Serial.println("Could not subscribe for cloud-to-device messages.");
       }
       else {
-        Serial.println("Subscribed for cloud-to-device messages; message id:" + String(r));
+        Serial.println("Subscribed for cloud-to-device messages; message id:" + String(result));
       }
       break;
     case MQTT_EVENT_DISCONNECTED:
@@ -148,13 +150,15 @@ static esp_err_t mqttEventHandler(esp_mqtt_event_handle_t event) {
         topic[i] = event->topic[i];
       }
       topic[i] = '\0';
-      Serial.printf("Message arrived on topic: %s \n", String(topic));
+      Serial.print("Message arrived on topic: ");
+      Serial.println(String(topic));
       char data[DATA_BUFFER_SIZE];
       for (i = 0; i < (DATA_BUFFER_SIZE - 1) && i < event->data_len; i++) {
         data[i] = event->data[i];
       }
       data[i] = '\0';
-      Serial.printf("Message Data: %s \n", String(data));
+      Serial.print("Message Data: ");
+      Serial.println(String(data));
       break;
     case MQTT_EVENT_BEFORE_CONNECT:
       Serial.println("MQTT event MQTT_EVENT_BEFORE_CONNECT");
@@ -173,8 +177,8 @@ void initIoTHubClient() {
   options.user_agent = AZ_SPAN_FROM_STR(AZURE_SDK_CLIENT_USER_AGENT);
   if (az_result_failed(az_iot_hub_client_init(
           &iot_hub_client,
-          az_span_create((uint8_t*)IOT_HUB_FQDN, strlen(IOT_HUB_FQDN)),
-          az_span_create((uint8_t*)DEVICE_ID, strlen(DEVICE_ID)),
+          az_span_create((uint8_t*) IOT_HUB_FQDN, strlen(IOT_HUB_FQDN)),
+          az_span_create((uint8_t*) DEVICE_ID, strlen(DEVICE_ID)),
           &options)))
   {
     Serial.println("Failed initializing Azure IoT Hub client");
