@@ -1,5 +1,8 @@
-// Utility macros and defines
+// macros and defines
+
 #define sizeofarray(a) (sizeof(a) / sizeof(a[0]))
+
+#define SUBSCRIBE_TOPIC "devices/" DEVICE_ID "/messages/devicebound/#"
 #define MQTT_QOS1 1
 #define DO_NOT_RETAIN_MSG 0
 

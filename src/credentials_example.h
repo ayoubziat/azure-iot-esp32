@@ -20,5 +20,5 @@
 #define DEVICE_ID ""
 
 // Shared Access Signature
-#define SAS_TOKEN ""
+#define SAS_TOKEN "SharedAccessSignature sr=........"
 

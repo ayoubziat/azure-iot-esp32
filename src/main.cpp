@@ -19,8 +19,6 @@ static az_iot_hub_client iot_hub_client;
 WiFiMulti wifiMulti;
 DHTSensor dhtSensor;
 
-#define SUBSCRIBE_TOPIC "devices/" DEVICE_ID "/messages/devicebound/#"
-
 void connectToWiFi();
 void initTime();
 void initIoTHubClient();
@@ -35,7 +33,6 @@ void setup() {
   initTime();
   initIoTHubClient();
   initMqttClient();
-  // (void) initMqttClient();
 }
 
 void loop() {
@@ -58,7 +55,7 @@ void loop() {
       Serial.println(F("Failed to read from DHT sensor"));
     }
     else {
-      // sendTelemetryData(temperature, humidity);
+      sendTelemetryData(temperature, humidity);
     }
   }
 }
@@ -102,16 +99,6 @@ void initTime() {
     now = time(nullptr);
   }
   Serial.println("\nTime initialized!");
-}
-
-void receivedCallback(char* topic, byte* payload, unsigned int length) {
-  Serial.println("Received [");
-  Serial.println(topic);
-  Serial.println("]: ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-  }
-  Serial.println("");
 }
 
 static esp_err_t mqttEventHandler(esp_mqtt_event_handle_t event) {
@@ -239,9 +226,8 @@ int initMqttClient() {
 void sendTelemetryData(float temperature, float humidity) {
   Serial.println("-----------------------------------------");
   Serial.println("## Sending telemetry data ##");
-  if (az_result_failed(az_iot_hub_client_telemetry_get_publish_topic(
-          &iot_hub_client, NULL, mqtt_publish_topic, sizeof(mqtt_publish_topic), NULL)))
-  {
+
+  if (az_result_failed(az_iot_hub_client_telemetry_get_publish_topic(&iot_hub_client, NULL, mqtt_publish_topic, sizeof(mqtt_publish_topic), NULL))) {
     Serial.println("Failed az_iot_hub_client_telemetry_get_publish_topic");
     return;
   }
@@ -264,18 +250,9 @@ void sendTelemetryData(float temperature, float humidity) {
   messagePayload[messageSize + 1] = '\n';
   serializeJson(jsonDoc, messagePayload, messageSize);
 
-  if (esp_mqtt_client_publish(
-          mqtt_client,
-          mqtt_publish_topic,
-          (const char*) messagePayload,
-          messageSize,
-          MQTT_QOS1,
-          DO_NOT_RETAIN_MSG)
-      == 0)
-  {
+  if (esp_mqtt_client_publish(mqtt_client, mqtt_publish_topic, (const char*) messagePayload, messageSize, MQTT_QOS1, DO_NOT_RETAIN_MSG) == 0){
     Serial.println("Failed publishing the measurements");
-  }
-  else {
+  } else {
     Serial.println("DHT measurements: published successfully");
     Serial.println(messagePayload);
     message_count++;
