@@ -5,12 +5,8 @@
 // WiFi password
 #define WIFI_PASSWORD ""
 
-// Azure IoTs
-
+// Azure IoT
 #define AZURE_SDK_CLIENT_USER_AGENT "c%2F" AZ_SDK_VERSION_STRING
-
-// Primary connection string of the device
-#define IOT_DEVICE_PRIMARY_CONNECTION_STRING ""
 
 #define IOT_HUB_NAME ""
 #define IOT_HUB_FQDN IOT_HUB_NAME ".azure-devices.net"
