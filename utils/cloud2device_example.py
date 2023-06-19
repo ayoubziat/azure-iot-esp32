@@ -5,13 +5,13 @@ MESSAGE_COUNT = 2
 AVG_WIND_SPEED = 10.0
 MSG_TXT = "{\"service client sent a message\": %.2f}"
 
-SERVICE_CONNECTION_STRING = "HostName=aziothub.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=rJFFJQsNcRBf56j9ZFwUvXgrKVDKHhDun+QvoP9dAik="
+SERVICE_CONNECTION_STRING = ""
 DEVICE_ID = ""
 
 def iothub_messaging_sample_run():
     try:
         # Create IoTHubRegistryManager
-        registry_manager = IoTHubRegistryManager(CONNECTION_STRING)
+        registry_manager = IoTHubRegistryManager(SERVICE_CONNECTION_STRING)
 
         for i in range(0, MESSAGE_COUNT):
             print ( 'Sending message: {0}'.format(i) )

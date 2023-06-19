@@ -6,3 +6,4 @@
 
 
 src/credentials.h
+utils/cloud2device.py
